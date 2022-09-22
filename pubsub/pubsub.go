@@ -12,7 +12,7 @@ type PubsubClient struct {
 	Context context.Context
 }
 
-func NewPubsubClient(projectID string) (*PubsubClient, error) {
+func NewClient(projectID string) (*PubsubClient, error) {
 	c := &PubsubClient{}
 
 	c.Context = context.Background()

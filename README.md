@@ -37,7 +37,7 @@ func main() {
 	projectID := "projectID"
 	topicName := "topicName"
 
-	c, err := pubsub.NewPubsubClient(projectID)
+	c, err := pubsub.NewClient(projectID)
 	fmt.Println(c, err)
 
 	t, err := c.Topic(topicName)
