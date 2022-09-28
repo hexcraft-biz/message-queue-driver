@@ -36,7 +36,7 @@ func (m *Msg) Bytes() []byte {
 func main() {
 
 	/*
-		jj := `{"uuid":"353a1e3f-45bc-4c25-bc5e-5f3867297852","timestamp":"2022-09-25T07:57:30Z","entity":{"aaa":"AAA","bbb":"BBB","text":"test-123123"}}`
+		jj := `{"uuid":"353a1e3f-45bc-4c25-bc5e-5f3867297852","time":"2022-09-25T07:57:30Z","entity":{"aaa":"AAA","bbb":"BBB","text":"test-123123"}}`
 		mm := msg.MessagePrototype{}
 		json.Unmarshal([]byte(jj), &mm)
 		fmt.Println(mm)
@@ -56,8 +56,8 @@ func main() {
 
 	msgId, err := t.Publish(&Msg{
 		MessagePrototype: message.MessagePrototype{
-			UUID:      &uid,
-			Timestamp: &ctime,
+			UUID: &uid,
+			Time: &ctime,
 			Entity: mdata{
 				A:    "AAA",
 				B:    "BBB",
@@ -69,9 +69,9 @@ func main() {
 
 	msgId1, err := t.Publish(&Msg{
 		MessagePrototype: message.MessagePrototype{
-			UUID:      &uid,
-			Timestamp: &ctime,
-			Entity:    "ok",
+			UUID:   &uid,
+			Time:   &ctime,
+			Entity: "ok",
 		},
 	})
 	fmt.Println(msgId1, err)
