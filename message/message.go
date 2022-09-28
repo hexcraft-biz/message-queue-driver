@@ -8,7 +8,7 @@ import (
 
 type MessagePrototype struct {
 	UUID   *uuid.UUID  `json:"uuid"`
-	time   *time.Time  `json:"time"`
+	Time   *time.Time  `json:"time"`
 	Entity interface{} `json:"entity"`
 }
 
