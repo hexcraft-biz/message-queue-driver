@@ -4,6 +4,7 @@ import (
 	"fmt"
 
 	"cloud.google.com/go/pubsub"
+	"github.com/hexcraft-biz/message-queue-driver/message"
 	"golang.org/x/net/context"
 )
 
@@ -51,11 +52,7 @@ type PubsubTopic struct {
 	Context context.Context
 }
 
-type messageInterface interface {
-	Bytes() []byte
-}
-
-func (t *PubsubTopic) Publish(m messageInterface) (string, error) {
+func (t *PubsubTopic) Publish(m message.MessageInterface) (string, error) {
 	res := t.Entity.Publish(t.Context, &pubsub.Message{
 		Data: m.Bytes(),
 	})
