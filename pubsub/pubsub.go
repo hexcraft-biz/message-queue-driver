@@ -11,14 +11,17 @@ import (
 func NewClient(projectID string) (*PubsubClient, error) {
 	context := context.Background()
 
-	if client, err := pubsub.NewClient(context, projectID); err != nil {
+	client, err := pubsub.NewClient(context, projectID)
+	if err != nil {
 		return nil, fmt.Errorf("pubsub: NewClient: %v", err)
-	} else {
-		return &PubsubClient{
-			Entity:  client,
-			Context: context,
-		}, nil
+	} else if client == nil {
+		return nil, fmt.Errorf("pubsub: NewClient: client is null")
 	}
+
+	return &PubsubClient{
+		Entity:  client,
+		Context: context,
+	}, nil
 }
 
 type PubsubClient struct {
@@ -30,11 +33,11 @@ func (c *PubsubClient) Close() {
 	c.Entity.Close()
 }
 
-func (c *PubsubClient) Topic(topicName string) (*PubsubTopic, error) {
+func (c *PubsubClient) Topic(topicName string) *PubsubTopic {
 	return &PubsubTopic{
 		Entity:  c.Entity.Topic(topicName),
 		Context: c.Context,
-	}, nil
+	}
 }
 
 type PubsubTopic struct {
@@ -44,7 +47,7 @@ type PubsubTopic struct {
 
 func (t *PubsubTopic) Exists() (bool, error) {
 	if ok, err := t.Entity.Exists(t.Context); err != nil {
-		return false, fmt.Errorf("pubsub: NewClient: %v", err)
+		return false, fmt.Errorf("pubsub: PubsubTopic.Exists: %v", err)
 	} else {
 		return ok, nil
 	}
