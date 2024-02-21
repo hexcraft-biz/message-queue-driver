@@ -8,24 +8,22 @@ import (
 	"golang.org/x/net/context"
 )
 
+func NewClient(projectID string) (*PubsubClient, error) {
+	context := context.Background()
+
+	if client, err := pubsub.NewClient(context, projectID); err != nil {
+		return nil, fmt.Errorf("pubsub: NewClient: %v", err)
+	} else {
+		return &PubsubClient{
+			Entity:  client,
+			Context: context,
+		}, nil
+	}
+}
+
 type PubsubClient struct {
 	Entity  *pubsub.Client
 	Context context.Context
-}
-
-func NewClient(projectID string) (*PubsubClient, error) {
-	c := &PubsubClient{}
-
-	c.Context = context.Background()
-
-	client, err := pubsub.NewClient(c.Context, projectID)
-	if err != nil {
-		return nil, fmt.Errorf("pubsub: NewClient: %v", err)
-
-	}
-	c.Entity = client
-
-	return c, nil
 }
 
 func (c *PubsubClient) Close() {
@@ -33,23 +31,23 @@ func (c *PubsubClient) Close() {
 }
 
 func (c *PubsubClient) Topic(topicName string) (*PubsubTopic, error) {
-	t := &PubsubTopic{
+	return &PubsubTopic{
 		Entity:  c.Entity.Topic(topicName),
 		Context: c.Context,
-	}
-
-	if ok, err := t.Entity.Exists(t.Context); err != nil {
-		return nil, fmt.Errorf("pubsub: NewClient: %v", err)
-	} else if ok == false {
-		return nil, fmt.Errorf("pubsub: topic: %s is not exist.", topicName)
-	}
-
-	return t, nil
+	}, nil
 }
 
 type PubsubTopic struct {
 	Entity  *pubsub.Topic
 	Context context.Context
+}
+
+func (t *PubsubTopic) Exists() (bool, error) {
+	if ok, err := t.Entity.Exists(t.Context); err != nil {
+		return false, fmt.Errorf("pubsub: NewClient: %v", err)
+	} else {
+		return ok, nil
+	}
 }
 
 func (t *PubsubTopic) Publish(m message.MessageInterface) (string, error) {
