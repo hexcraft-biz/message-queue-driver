@@ -53,9 +53,10 @@ func (t *PubsubTopic) Exists() (bool, error) {
 	}
 }
 
-func (t *PubsubTopic) Publish(m message.MessageInterface) (string, error) {
+func (t *PubsubTopic) Publish(msg message.MessageInterface, attrs map[string]string) (string, error) {
 	res := t.Entity.Publish(t.Context, &pubsub.Message{
-		Data: m.Bytes(),
+		Data:       msg.Bytes(),
+		Attributes: attrs,
 	})
 
 	msgId, err := res.Get(t.Context)
