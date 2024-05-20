@@ -45,6 +45,10 @@ type PubsubTopic struct {
 	Entity *pubsub.Topic
 }
 
+func (t *PubsubTopic) Close() {
+	t.Entity.Stop()
+}
+
 func (t *PubsubTopic) Exists() (bool, error) {
 	if ok, err := t.Entity.Exists(context.Background()); err != nil {
 		return false, fmt.Errorf("pubsub: PubsubTopic.Exists: %v", err)
@@ -54,13 +58,9 @@ func (t *PubsubTopic) Exists() (bool, error) {
 }
 
 func (t *PubsubTopic) Publish(msgData message.MessageInterface, attrs map[string]string) *pubsub.PublishResult {
-	defer t.Entity.Stop()
-
 	// Publish message to the topic
-	res := t.Entity.Publish(context.Background(), &pubsub.Message{
+	return t.Entity.Publish(context.Background(), &pubsub.Message{
 		Data:       msgData.Bytes(),
 		Attributes: attrs,
 	})
-
-	return res
 }
