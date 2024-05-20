@@ -12,6 +12,14 @@ type MessagePrototype struct {
 	Entity interface{} `json:"entity"`
 }
 
+func (p *MessagePrototype) Init() {
+	uid := uuid.New()
+	ctime := time.Now()
+
+	p.UUID = &uid
+	p.Time = &ctime
+}
+
 type MessageInterface interface {
 	Bytes() []byte
 }
