@@ -14,7 +14,7 @@ type MessagePrototype struct {
 
 func (p *MessagePrototype) Init() {
 	uid := uuid.New()
-	ctime := time.Now()
+	ctime := time.Now().UTC()
 
 	p.UUID = &uid
 	p.Time = &ctime
